@@ -1,9 +1,3 @@
 from django.db import models
 
-class List(models.Model):
-    pass
-
-class Item(models.Model):
-    list = models.ForeignKey(List)
-    text = models.CharField(max_length=200)
-
+# Create your models here.
