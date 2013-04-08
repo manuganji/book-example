@@ -36,12 +36,32 @@ class NewListTest(TestCase):
                 data={'item_text': 'A new list item'}
         )
 
+        self.assertEqual(List.objects.all().count(), 1)
+        new_list = List.objects.all()[0]
         self.assertEqual(Item.objects.all().count(), 1)
         new_item = Item.objects.all()[0]
         self.assertEqual(new_item.text, 'A new list item')
+        self.assertEqual(new_item.list, new_list)
 
-        self.assertRedirects(response, '/lists/the-only-list-in-the-world/')
+        self.assertRedirects(response, '/lists/%d/' % (new_list.id,))
 
+
+class NewItemTest(TestCase):
+
+    def test_saving_a_POST_request_to_an_existing_list(self):
+        list = List.objects.create()
+        other_list = List.objects.create()
+        client = Client()
+        response = client.post(
+            '/lists/%d/new_item' % (list.id,),
+            data={'item_text': 'A new item for an existing list'}
+        )
+
+        self.assertEqual(Item.objects.all().count(), 1)
+        new_item = Item.objects.all()[0]
+        self.assertEqual(new_item.text, 'A new item for an existing list')
+        self.assertEqual(new_item.list, list)
+        self.assertRedirects(response, '/lists/%d/' % (list.id,))
 
 
 
@@ -52,12 +72,20 @@ class ListViewTest(TestCase):
         Item.objects.create(text='itemey 1', list=list)
         Item.objects.create(text='itemey 2', list=list)
 
+        other_list = List.objects.create()
+        Item.objects.create(text='other list item 1', list=other_list)
+        Item.objects.create(text='other list item 2', list=other_list)
+
         client = Client()
-        response = client.get('/lists/the-only-list-in-the-world/')
+        response = client.get('/lists/%d/' % (list.id,))
 
         self.assertIn('itemey 1', response.content)
         self.assertIn('itemey 2', response.content)
+        self.assertNotIn('other list item 1', response.content)
+        self.assertNotIn('other list item 2', response.content)
         self.assertTemplateUsed(response, 'list.html')
+        self.assertEqual(response.context['list'], list)
+
 
 
     def test_home_page_only_saves_items_when_necessary(self):
