@@ -21,11 +21,6 @@ class HomePageTest(TestCase):
         self.assertEqual(response.content.decode(), expected_html)
 
 
-    def test_home_page_only_saves_items_when_necessary(self):
-        request = HttpRequest()
-        home_page(request)
-        self.assertEqual(Item.objects.all().count(), 0)
-
 
 class NewListTest(TestCase):
 
@@ -85,24 +80,6 @@ class ListViewTest(TestCase):
         self.assertNotIn('other list item 2', response.content)
         self.assertTemplateUsed(response, 'list.html')
         self.assertEqual(response.context['list'], list)
-
-
-
-    def test_home_page_only_saves_items_when_necessary(self):
-        request = HttpRequest()
-        home_page(request)
-        self.assertEqual(Item.objects.all().count(), 0)
-
-
-    def test_home_page_displays_all_list_items(self):
-        Item.objects.create(text='itemey 1')
-        Item.objects.create(text='itemey 2')
-
-        request = HttpRequest()
-        response = home_page(request)
-
-        self.assertIn('itemey 1', response.content.decode())
-        self.assertIn('itemey 2', response.content.decode())
 
 
 
