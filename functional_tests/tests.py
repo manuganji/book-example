@@ -128,4 +128,3 @@ class NewVisitorTest(LiveServerTestCase):
             window_width / 2,
             delta=3
         )
-
