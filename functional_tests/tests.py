@@ -112,6 +112,5 @@ class NewVisitorTest(LiveServerTestCase):
             delta=3
         )
 
-        self.fail("check it's also centered on other pages")
         self.fail("check footer copyright message is at bottom of page")
 
