@@ -112,5 +112,3 @@ class NewVisitorTest(LiveServerTestCase):
             delta=3
         )
 
-        self.fail("check footer copyright message is at bottom of page")
-

@@ -8,10 +8,12 @@
     <body>
         <div class="container">
             <div class="row">
-                <div class="span6 offset3 text-center">
-                    <h1>{% block header_text %}{% endblock %}</h1>
-                    {% block form %}
-                    {% endblock %}
+                <div class="span6 offset3">
+                    <div class="text-center">
+                        <h1>{% block header_text %}{% endblock %}</h1>
+                        {% block form %}
+                        {% endblock %}
+                    </div>
                     {% block table %}
                     {% endblock %}
                 </div>
