@@ -113,5 +113,3 @@ class NewVisitorTest(LiveServerTestCase):
             window_width / 2,
             delta=3
         )
-
-        self.fail("check it's also centered on other pages")
