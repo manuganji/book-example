@@ -88,7 +88,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('Buy milk', page_text)
 
 
-    def test_layount_and_styling(self):
+    def test_layout_and_styling(self):
         # Edith goes to the home page
         self.browser.get(self.live_server_url)
 
