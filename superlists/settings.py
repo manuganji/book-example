@@ -1,6 +1,6 @@
 # Django settings for superlists project.
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -60,8 +60,12 @@ MEDIA_URL = ''
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/var/www/example.com/static/"
-STATIC_ROOT = ''
+# Example: "/home/media/media.lawrence.com/static/"
+from os import path
+STATIC_ROOT = path.abspath(path.join(path.dirname(__file__), '../../static'))
+
+# This next setting is needed when DEBUG=False
+ALLOWED_HOSTS = ['localhost']
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -156,3 +160,4 @@ LOGGING = {
         },
     }
 }
+
