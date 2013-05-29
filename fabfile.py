@@ -1,79 +1,47 @@
-from fabric.context_managers import settings
 from fabric.contrib.files import exists
-from fabric.api import cd, env, local, run
-from os import listdir, path
-import shutil
-import unittest
-from mock import patch
+from fabric.api import cd, run
+from os import path
 
 
 REPO_URL = 'https://github.com/hjwp/book-example.git'
 SITES_FOLDER = '/home/harry/sites'
 
-def _create_directory_structure(site_name):
+def create_directory_structure(SITES_FOLDER, site_name):
     base_folder = path.join(SITES_FOLDER, site_name)
     run('mkdir -p %s' % (base_folder))
     for subfolder in ('database', 'static', 'virtualenv', 'source'):
         run('mkdir -p %s/%s' % (base_folder, subfolder))
 
 
-def _update_files(source_folder):
-    if exists('.git'):
-        run('git pull')
-        run('git reset --hard')
+def get_latest_source(site_name):
+    source_folder = path.join(SITES_FOLDER, site_name, 'source')
+    if exists(path.join(source_folder, '.git')):
+        with cd(source_folder):
+            run('git pull')
+            run('git reset --hard')
     else:
-        run('git clone %s %s' % (REPO_URL, source_folder))
-
-    if not exists('../virtualenv'):
-        run('virtualenv ../virtualenv')
-    run('../virtualenv/bin/pip install -r requirements.txt')
-
-    run('python manage.py collectstatic --noinput')
-    run('python manage.py syncdb --noinput')
+        with cd(source_folder):
+            run('git clone %s %s' % (REPO_URL, source_folder))
 
 
-def update():
-    print 'running against', env.host
-    _create_directory_structure(env.host)
-
-    source_folder = path.join(SITES_FOLDER, env.host, 'source')
+def update_virtualenv(site_name):
+    source_folder = path.join(SITES_FOLDER, site_name, 'source')
     with cd(source_folder):
-        _update_files()
+        if not exists(path.join(source_folder, '../virtualenv')):
+            run('virtualenv ../virtualenv')
+        run('../virtualenv/bin/pip install -r requirements.txt')
 
 
 
-class FabFileTest(unittest.TestCase):
-    def tearDown(self):
-        if path.exists('/tmp/fabfiletest'):
-            shutil.rmtree('/tmp/fabfiletest')
-
-    @patch('fabfile.run', local)
-    @patch('fabfile.SITES_FOLDER', '/tmp/fabfiletest')
-    def test_update_creates_folders(self):
-        _create_directory_structure('www.testhosts.com')
-
-        self.assertEqual(
-            listdir('/tmp/fabfiletest'),
-            ['www.testhosts.com']
-        )
-        self.assertItemsEqual(
-            listdir('/tmp/fabfiletest/www.testhosts.com'),
-            ['database', 'source', 'static', 'virtualenv']
-        )
+def update_static_files(site_name):
+    source_folder = path.join(SITES_FOLDER, site_name, 'source')
+    with cd(source_folder):
+        run('python manage.py collectstatic --noinput')
 
 
-    @patch('fabfile.run')
-    @patch('fabfile.exists')
-    def test_update_files(self, mock_run, mock_cd):
-        _create_directory_structure('www.testhosts.com')
-
-        self.assertEqual(
-            listdir('/tmp/fabfiletest'),
-            ['www.testhosts.com']
-        )
-        self.assertItemsEqual(
-            listdir('/tmp/fabfiletest/www.testhosts.com'),
-            ['database', 'source', 'static', 'virtualenv']
-        )
+def update_database(site_name):
+    source_folder = path.join(SITES_FOLDER, site_name, 'source')
+    with cd(source_folder):
+        run('python manage.py syncdb --noinput')
 
 
