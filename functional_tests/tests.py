@@ -128,3 +128,40 @@ class NewVisitorTest(LiveServerTestCase):
             window_width / 2,
             delta=3
         )
+
+
+    def test_adding_notes(self):
+        # Edith starts a new list
+        self.browser.get(self.server_url)
+        self.browser.find_element_by_id('id_new_item').send_keys("Buy milk\n")
+        self.check_for_row_in_list_table("1: Buy milk")
+
+        # She notices a link next to her first new item that says "add notes"
+        # so she clicks it
+        self.browser.find_element_by_link_text("add notes").click()
+
+        # She is presented with a form that allows her to write in some notes
+        self.browser.find_element_by_name('notes').send_keys(
+            "You can find milk in a shop"
+        )
+
+        # She cicks submit and the note now shows up in the list
+        self.browser.find_element_by_css_selector('input[type=submit]').click()
+        self.assertIn(
+            "You can find milk in a shop",
+            self.browser.find_element_by_tag_name('body').text
+        )
+        self.fail('finish me')
+
+        # She enters a second item, and edits it to add a second,
+        # longer note
+
+        # Now when she clicks submit she sees that the text of
+        # her second note is abbreviated.
+
+        # She sees a "more" link, which she clicks, which takes
+        # her to a page with the full note content.
+
+        # She wonders whether there is a page for shorter notes
+        # too, and realises that list items are clickable.
+

@@ -82,6 +82,23 @@ class ListViewTest(TestCase):
 
 
 
+class EditNotesViewTest(TestCase):
+
+    def test_edit_notes_view_renders_form_to_edit_notes(self):
+        list1 = List.objects.create()
+        item1 = Item.objects.create(text='itemey 1', list=list1)
+        item2 = Item.objects.create(text='itemey 2', list=list1)
+
+        client = Client()
+        response = client.get(
+            '/lists/%d/item/%d/edit_notes/' % (list1.id, item2.id)
+        )
+
+        self.assertIn('action="/lists/%d/notes"' % (list1.id,), response.content)
+        self.assertIn('type=textfield', response.content)
+
+
+
 class ListAndItemModelsTest(TestCase):
 
     def test_saving_and_retrieving_items(self):
