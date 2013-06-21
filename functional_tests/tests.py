@@ -32,7 +32,13 @@ class NewVisitorTest(LiveServerTestCase):
     def check_for_row_in_list_table(self, row_text):
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(row_text, [row.text for row in rows])
+        self.assertTrue(
+            any(row_text in row.text for row in rows),
+            "Could not find row with text %r, table text was:\n%s" % (
+                row_text, table.text
+            )
+
+        )
 
 
     def test_can_start_a_list_and_retrieve_it_later(self):
@@ -136,9 +142,9 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.find_element_by_id('id_new_item').send_keys("Buy milk\n")
         self.check_for_row_in_list_table("1: Buy milk")
 
-        # She notices a link next to her first new item that says "add notes"
+        # She notices a link next to her first new item that says "edit notes"
         # so she clicks it
-        self.browser.find_element_by_link_text("add notes").click()
+        self.browser.find_element_by_link_text("edit notes").click()
 
         # She is presented with a form that allows her to write in some notes
         self.browser.find_element_by_name('notes').send_keys(

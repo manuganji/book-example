@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block header_text %}Edit notes{% endblock %}
+
+{% block form %}
+    <form method="POST" action="/lists/{{ item.list.id }}/item/{{ item.id }}/notes">
+        {% csrf_token %}
+        <input name="notes" type="textfield"/>
+        <input type="submit" value="Save"/>
+    </form>
+{% endblock %}
+
+

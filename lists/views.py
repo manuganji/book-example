@@ -23,3 +23,6 @@ def add_item(request, list_id):
     Item.objects.create(text=request.POST['item_text'], list=list)
     return redirect('/lists/%d/' % (list.id,))
 
+def edit_notes(request, list_id, item_id):
+    item = Item.objects.get(id=item_id)
+    return render(request, 'edit_notes.html', {'item': item})

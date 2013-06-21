@@ -94,8 +94,12 @@ class EditNotesViewTest(TestCase):
             '/lists/%d/item/%d/edit_notes/' % (list1.id, item2.id)
         )
 
-        self.assertIn('action="/lists/%d/notes"' % (list1.id,), response.content)
-        self.assertIn('type=textfield', response.content)
+        self.assertEqual(response.context['item'], item2)
+        self.assertIn(
+            'action="/lists/%d/item/%d/notes"' % (list1.id, item2.id),
+            response.content
+        )
+        self.assertIn('<input name="notes" type="textfield"', response.content)
 
 
 
