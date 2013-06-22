@@ -10,12 +10,16 @@
 {% endblock %}
 
 {% block table %}
-    <table id="id_list_table">
+    <table id="id_list_table" class="table table-hover">
         {% for item in list.item_set.all %}
             <tr>
                 <td>{{ forloop.counter }}:</td>
                 <td>{{ item.text }}</td>
-                <td><a href="/lists/{{ list.id }}/item/{{ item.id }}/edit_notes/">edit notes</td>
+                <td width="20%">
+                    <p class="text-right"><small>
+                        <a href="/lists/{{ list.id }}/item/{{ item.id }}/edit_notes/">edit notes</a>
+                    </small></p>
+                </td>
             </tr>
         {% endfor %}
     </table>
