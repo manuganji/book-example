@@ -1,5 +1,6 @@
 from fabric.contrib.files import exists
 from fabric.api import env, run
+from fabric.contrib.files import sed, append
 from os import path
 
 
@@ -10,6 +11,7 @@ def deploy():
     _create_directory_structure_if_necessary(env.host) #<2>
     source_folder = path.join(SITES_FOLDER, env.host, 'source')
     _get_latest_source(source_folder)
+    _update_settings(source_folder, env.host)
     _update_virtualenv(source_folder)
     _update_static_files(source_folder)
     _update_database(source_folder)
@@ -27,6 +29,11 @@ def _get_latest_source(source_folder):
         run('cd %s && git pull' % (source_folder,)) #<7>
     else:
         run('git clone %s %s' % (REPO_URL, source_folder))
+
+def _update_settings(source_folder, site_name):
+    settings_path = path.join(source_folder, 'superlists/settings.py')
+    sed(settings_path, "DEBUG = True", "DEBUG = False")
+    append(settings_path, 'ALLOWED_HOSTS = "%s"' % (site_name,))
 
 def _update_virtualenv(source_folder):
     virtualenv_folder = path.join(source_folder, '../virtualenv')
