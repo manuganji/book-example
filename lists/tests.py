@@ -99,7 +99,23 @@ class EditNotesViewTest(TestCase):
             'action="/lists/%d/item/%d/notes"' % (list1.id, item2.id),
             response.content
         )
-        self.assertIn('<input name="notes" type="textfield"', response.content)
+
+
+class UpdateNotesViewTest(TestCase):
+
+    def test_adding_new_notes_to_a_list(self):
+        list1 = List.objects.create()
+        item1 = Item.objects.create(text='itemey 1', list=list1)
+
+        client = Client()
+        response = client.post(
+            '/lists/%d/item/%d/notes' % (list1.id, item1.id),
+            data={'notes': 'some notes'}
+        )
+
+        item_in_db = Item.objects.get(id=item1.id)
+        self.assertEqual(item_in_db.notes, 'some notes')
+        self.assertRedirects(response, 'lists/%d/' % (list1.id,))
 
 
 
