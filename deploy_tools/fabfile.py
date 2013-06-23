@@ -25,19 +25,19 @@ def _create_directory_structure_if_necessary(site_name):
 
 def _get_latest_source(source_folder):
     if exists(path.join(source_folder, '.git')): #<5><6>
-        run('cd %s && git reset --hard' % (source_folder,))
-        run('cd %s && git pull' % (source_folder,)) #<7>
+        run('cd %s && git reset --hard' % (source_folder,)) #<7><8>
+        run('cd %s && git pull' % (source_folder,)) #<8>
     else:
-        run('git clone %s %s' % (REPO_URL, source_folder))
+        run('git clone %s %s' % (REPO_URL, source_folder)) #<8>
 
 def _update_settings(source_folder, site_name):
     settings_path = path.join(source_folder, 'superlists/settings.py')
-    sed(settings_path, "DEBUG = True", "DEBUG = False") #<8>
-    append(settings_path, 'ALLOWED_HOSTS = ["%s"]' % (site_name,)) #<9>
+    sed(settings_path, "DEBUG = True", "DEBUG = False") #<9>
+    append(settings_path, 'ALLOWED_HOSTS = ["%s"]' % (site_name,)) #<10>
 
 def _update_virtualenv(source_folder):
     virtualenv_folder = path.join(source_folder, '../virtualenv')
-    if not exists(path.join(virtualenv_folder, 'bin', 'pip')): #<10>
+    if not exists(path.join(virtualenv_folder, 'bin', 'pip')): #<11>
         run('virtualenv %s' % (virtualenv_folder,))
     run('%s/bin/pip install -r %s/requirements.txt' % (
             virtualenv_folder, source_folder
@@ -45,7 +45,7 @@ def _update_virtualenv(source_folder):
 
 
 def _update_static_files(source_folder):
-    run('cd %s && ../virtualenv/bin/python manage.py collectstatic --noinput' % ( # <11>
+    run('cd %s && ../virtualenv/bin/python manage.py collectstatic --noinput' % ( # <12>
         source_folder,
     ))
 
@@ -54,5 +54,4 @@ def _update_database(source_folder):
     run('cd %s && ../virtualenv/bin/python manage.py syncdb --noinput' % (
         source_folder,
     ))
-
 
