@@ -3,10 +3,13 @@
 {% block header_text %}Edit notes{% endblock %}
 
 {% block form %}
-    <form method="POST" action="/lists/{{ item.list.id }}/item/{{ item.id }}/notes">
+    <h3>&quot;{{ item.text }}&quot;</h3>
+    <form method="POST" action="/lists/{{ item.list.id }}/item/{{ item.id }}/notes" class="form-inline">
         {% csrf_token %}
-        <input name="notes" type="textfield"/>
-        <input type="submit" value="Save"/>
+        <p>
+            <textarea name="notes" class="span5 offset1" rows="4"></textarea>
+            <input type="submit" class="btn btn-primary" value="Save"/>
+        </p>
     </form>
 {% endblock %}
 
