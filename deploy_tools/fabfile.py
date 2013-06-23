@@ -32,12 +32,12 @@ def _get_latest_source(source_folder):
 
 def _update_settings(source_folder, site_name):
     settings_path = path.join(source_folder, 'superlists/settings.py')
-    sed(settings_path, "DEBUG = True", "DEBUG = False")
-    append(settings_path, 'ALLOWED_HOSTS = "%s"' % (site_name,))
+    sed(settings_path, "DEBUG = True", "DEBUG = False") #<8>
+    append(settings_path, 'ALLOWED_HOSTS = ["%s"]' % (site_name,)) #<9>
 
 def _update_virtualenv(source_folder):
     virtualenv_folder = path.join(source_folder, '../virtualenv')
-    if not exists(path.join(virtualenv_folder, 'bin', 'pip')): #<8>
+    if not exists(path.join(virtualenv_folder, 'bin', 'pip')): #<10>
         run('virtualenv %s' % (virtualenv_folder,))
     run('%s/bin/pip install -r %s/requirements.txt' % (
             virtualenv_folder, source_folder
@@ -45,7 +45,7 @@ def _update_virtualenv(source_folder):
 
 
 def _update_static_files(source_folder):
-    run('cd %s && ../virtualenv/bin/python manage.py collectstatic --noinput' % ( # <9>
+    run('cd %s && ../virtualenv/bin/python manage.py collectstatic --noinput' % ( # <11>
         source_folder,
     ))
 
