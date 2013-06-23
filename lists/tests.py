@@ -131,3 +131,9 @@ class ListAndItemModelsTest(TestCase):
         self.assertEqual(first_saved_item.list, list)
         self.assertEqual(second_saved_item.text, 'Item the second')
         self.assertEqual(second_saved_item.list, list)
+
+
+    def test_notes(self):
+        item = Item()
+        self.assertEqual(item.notes, '')
+
