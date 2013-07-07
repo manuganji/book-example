@@ -1,7 +1,7 @@
 from django.core.urlresolvers import resolve
+from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.test import Client, TestCase
-from django.http import HttpRequest
 
 from lists.models import Item, List
 from lists.views import home_page
@@ -20,11 +20,6 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
         self.assertMultiLineEqual(response.content, expected_html)
 
-
-    def test_home_page_only_saves_items_when_necessary(self):
-        request = HttpRequest()
-        home_page(request)
-        self.assertEqual(Item.objects.all().count(), 0)
 
 
 class NewListTest(TestCase):
