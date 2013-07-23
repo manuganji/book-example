@@ -74,10 +74,10 @@ class ListViewTest(TestCase):
         client = Client()
         response = client.get('/lists/%d/' % (list.id,))
 
-        self.assertIn('itemey 1', response.content)
-        self.assertIn('itemey 2', response.content)
-        self.assertNotIn('other list item 1', response.content)
-        self.assertNotIn('other list item 2', response.content)
+        self.assertContains(response, 'itemey 1')
+        self.assertContains(response, 'itemey 2')
+        self.assertNotContains(response, 'other list item 1')
+        self.assertNotContains(response, 'other list item 2')
         self.assertTemplateUsed(response, 'list.html')
         self.assertEqual(response.context['list'], list)
 
