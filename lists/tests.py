@@ -31,11 +31,11 @@ class NewListTest(TestCase):
                 data={'item_text': 'A new list item'}
         )
 
-        self.assertEqual(List.objects.all().count(), 1)
-        new_list = List.objects.all()[0]
         self.assertEqual(Item.objects.all().count(), 1)
         new_item = Item.objects.all()[0]
         self.assertEqual(new_item.text, 'A new list item')
+        self.assertEqual(List.objects.all().count(), 1)
+        new_list = List.objects.all()[0]
         self.assertEqual(new_item.list, new_list)
 
         self.assertRedirects(response, '/lists/%d/' % (new_list.id,))
