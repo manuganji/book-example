@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import sys
 
-class NewVisitorTest(LiveServerTestCase):
+class FunctionalTest(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -32,6 +32,9 @@ class NewVisitorTest(LiveServerTestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
 
+
+
+class NewVisitorTest(FunctionalTest):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Edith has heard about a cool new online to-do app. She goes
@@ -105,6 +108,9 @@ class NewVisitorTest(LiveServerTestCase):
         # Satisified, she goes back to sleep
 
 
+
+class LayoutAndStylingTest(FunctionalTest):
+
     def test_layout_and_styling(self):
         # Edith goes to the home page
         self.browser.get(self.server_url)
@@ -130,26 +136,21 @@ class NewVisitorTest(LiveServerTestCase):
         )
 
 
-    def test_adding_notes(self):
-        # Edith starts a new list
 
-        # She notices a link next to her first new item that says "edit notes"
-        # so she clicks it
+class ItemValidationTest(FunctionalTest):
 
-        # She is presented with a form that allows her to write in some notes
+    def test_cannot_add_empty_list_items(self):
+        # Edith goes to the home page and accidentally tries to submit
+        # an empty list item. She hits Enter on the empty input box
 
-        # She cicks submit and the note now shows up in the list
+        # The home page refreshes, and there is an error message saying
+        # that list items cannot be blank
 
-        # She enters a second item, and edits it to add a second,
-        # longer note
+        # She tries again with some text for the item, which now works
 
-        # Now when she clicks submit she sees that the text of
-        # her second note is abbreviated.
+        # Perversely, she now decides to submit a second blank list item
 
-        # She sees a "more" link, which she clicks, which takes
-        # her to a page with the full note content.
+        # She receives a similar warning on the list page
 
-        # She wonders whether there is a page for shorter notes
-        # too, and realises that list items are clickable. She
-        # can view her short item too.
+        # And she can correct it by filling some text in
         self.fail('write me!')
