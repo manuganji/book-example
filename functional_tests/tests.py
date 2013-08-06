@@ -129,3 +129,27 @@ class NewVisitorTest(LiveServerTestCase):
             delta=3
         )
 
+
+    def test_adding_notes(self):
+        # Edith starts a new list
+
+        # She notices a link next to her first new item that says "edit notes"
+        # so she clicks it
+
+        # She is presented with a form that allows her to write in some notes
+
+        # She cicks submit and the note now shows up in the list
+
+        # She enters a second item, and edits it to add a second,
+        # longer note
+
+        # Now when she clicks submit she sees that the text of
+        # her second note is abbreviated.
+
+        # She sees a "more" link, which she clicks, which takes
+        # her to a page with the full note content.
+
+        # She wonders whether there is a page for shorter notes
+        # too, and realises that list items are clickable. She
+        # can view her short item too.
+        self.fail('write me!')
