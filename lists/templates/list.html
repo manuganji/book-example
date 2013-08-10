@@ -3,9 +3,12 @@
 {% block header_text %}Your To-Do list{% endblock %}
 
 {% block form %}
-    <form method="POST" action="/lists/{{ list.id }}/new_item" >
+    <form method="POST" action="/lists/{{ list.id }}/" >
         <input id="id_new_item" name="item_text" placeholder="Enter a to-do item" />
         {% csrf_token %}
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
     </form>
 {% endblock %}
 

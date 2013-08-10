@@ -2,6 +2,7 @@ from django.core.urlresolvers import resolve
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.test import Client, TestCase
+from django.utils.html import escape
 
 from lists.models import Item, List
 from lists.views import home_page
@@ -27,8 +28,8 @@ class NewListTest(TestCase):
     def test_saving_a_POST_request(self):
         client = Client()
         response = client.post(
-                '/lists/new',
-                data={'item_text': 'A new list item'}
+            '/lists/new',
+            data={'item_text': 'A new list item'}
         )
 
         self.assertEqual(Item.objects.all().count(), 1)
@@ -41,22 +42,18 @@ class NewListTest(TestCase):
         self.assertRedirects(response, '/lists/%d/' % (new_list.id,))
 
 
-class NewItemTest(TestCase):
-
-    def test_saving_a_POST_request_to_an_existing_list(self):
-        list = List.objects.create()
-        other_list = List.objects.create()
+    def test_validation_errors_sent_back_to_home_page_template(self):
         client = Client()
         response = client.post(
-            '/lists/%d/new_item' % (list.id,),
-            data={'item_text': 'A new item for an existing list'}
+            '/lists/new',
+            data={'item_text': ''}
         )
 
-        self.assertEqual(Item.objects.all().count(), 1)
-        new_item = Item.objects.all()[0]
-        self.assertEqual(new_item.text, 'A new item for an existing list')
-        self.assertEqual(new_item.list, list)
-        self.assertRedirects(response, '/lists/%d/' % (list.id,))
+        self.assertEqual(Item.objects.all().count(), 0)
+        self.assertTemplateUsed(response, 'home.html')
+        expected_error =  escape("You can't have an empty list item")
+        self.assertContains(response, expected_error)
+
 
 
 
@@ -81,3 +78,32 @@ class ListViewTest(TestCase):
         self.assertTemplateUsed(response, 'list.html')
         self.assertEqual(response.context['list'], list)
 
+
+    def test_saving_a_POST_request_to_an_existing_list(self):
+        list = List.objects.create()
+        other_list = List.objects.create()
+        client = Client()
+        response = client.post(
+            '/lists/%d/' % (list.id,),
+            data={'item_text': 'A new item for an existing list'}
+        )
+
+        self.assertEqual(Item.objects.all().count(), 1)
+        new_item = Item.objects.all()[0]
+        self.assertEqual(new_item.text, 'A new item for an existing list')
+        self.assertEqual(new_item.list, list)
+        self.assertRedirects(response, '/lists/%d/' % (list.id,))
+
+
+    def test_validation_errors_end_up_on_lists_page(self):
+        list = List.objects.create()
+        client = Client()
+        response = client.post(
+            '/lists/%d/' % (list.id,),
+            data={'item_text': ''}
+        )
+
+        self.assertEqual(Item.objects.all().count(), 0)
+        self.assertTemplateUsed(response, 'list.html')
+        expected_error =  escape("You can't have an empty list item")
+        self.assertContains(response, expected_error)
