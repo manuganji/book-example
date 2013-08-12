@@ -4,11 +4,10 @@
 
 {% block form %}
     <form method="POST" action="/lists/{{ list.id }}/" >
-        <input id="id_new_item" name="item_text" placeholder="Enter a to-do item" />
+        {{ form.fields.text }}
         {% csrf_token %}
-        {% if error %}
-            <p class="error">{{ error }}</p>
-        {% endif %}
+        {{ form.text.errors }}
+        {{ error }}
     </form>
 {% endblock %}
 
