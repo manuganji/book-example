@@ -70,13 +70,13 @@ class ListViewTest(TestCase):
 
         client = Client()
         response = client.get('/lists/%d/' % (list.id,))
-        self.assertEqual(response.context['list'], list)
 
         self.assertContains(response, 'itemey 1')
         self.assertContains(response, 'itemey 2')
         self.assertNotContains(response, 'other list item 1')
         self.assertNotContains(response, 'other list item 2')
         self.assertTemplateUsed(response, 'list.html')
+        self.assertEqual(response.context['list'], list)
 
 
     def test_saving_a_POST_request_to_an_existing_list(self):
@@ -85,7 +85,7 @@ class ListViewTest(TestCase):
         client = Client()
         response = client.post(
             '/lists/%d/' % (list.id,),
-            data={'text': 'A new item for an existing list'}
+            data={'item_text': 'A new item for an existing list'}
         )
 
         self.assertEqual(Item.objects.all().count(), 1)
@@ -100,7 +100,7 @@ class ListViewTest(TestCase):
         client = Client()
         response = client.post(
             '/lists/%d/' % (list1.id,),
-            data={'text': ''}
+            data={'item_text': ''}
         )
 
         self.assertEqual(Item.objects.all().count(), 0)
@@ -115,7 +115,7 @@ class ListViewTest(TestCase):
         client = Client()
         response = client.post(
             '/lists/%d/' % (list1.id,),
-            data={'text': 'textey'}
+            data={'item_text': 'textey'}
         )
 
         self.assertEqual(Item.objects.all().count(), 1)

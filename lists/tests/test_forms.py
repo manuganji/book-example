@@ -42,7 +42,7 @@ class ItemFormTest(TestCase):
         form = ItemForm(list1, data={'list': list1.id, 'text': ''})
         self.assertEqual(
             form.errors['text'],
-            ["You can't have an empty list item"]
+            ["You can't have a blank item"]
         )
 
 
@@ -52,7 +52,7 @@ class ItemFormTest(TestCase):
         form = ItemForm(list1, data={'list': list1.id, 'text': 'textey'})
         self.assertEqual(
             form.errors['text'],
-            ["You've already got this in your list"]
+            ["You've already got this item in your list"]
         )
         self.assertNotIn('__all__', form.errors)
 
