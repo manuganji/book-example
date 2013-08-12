@@ -1,4 +1,3 @@
-from django.core.urlresolvers import reverse
 from django.db import models
 
 class List(models.Model):
@@ -19,6 +18,3 @@ class Item(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse('view_list', args=(self.id,))
