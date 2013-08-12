@@ -6,9 +6,11 @@ from django.utils.html import escape
 
 from lists.models import Item, List
 from lists.views import home_page
+from lists.forms import ItemForm
 
 
 class HomePageTest(TestCase):
+    maxDiff = None
 
     def test_root_url_resolves_to_home_page_view(self):
         found = resolve('/')
@@ -18,9 +20,14 @@ class HomePageTest(TestCase):
     def test_home_page_returns_correct_html(self):
         request = HttpRequest()
         response = home_page(request)
-        expected_html = render_to_string('home.html')
-        self.assertEqual(response.content.decode(), expected_html)
+        expected_html = render_to_string('home.html', {'form': ItemForm()})
+        self.assertMultiLineEqual(response.content.decode(), expected_html)
 
+
+    def test_home_page_uses_itemform(self):
+        response = Client().get('/')
+        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertContains(response, '<input id="id_text"')
 
 
 class NewListTest(TestCase):
@@ -29,7 +36,7 @@ class NewListTest(TestCase):
         client = Client()
         response = client.post(
             '/lists/new',
-            data={'item_text': 'A new list item'}
+            data={'text': 'A new list item'}
         )
 
         self.assertEqual(Item.objects.all().count(), 1)
@@ -46,7 +53,7 @@ class NewListTest(TestCase):
         client = Client()
         response = client.post(
             '/lists/new',
-            data={'item_text': ''}
+            data={'text': ''}
         )
 
         self.assertEqual(Item.objects.all().count(), 0)
@@ -79,13 +86,20 @@ class ListViewTest(TestCase):
         self.assertEqual(response.context['list'], list)
 
 
+    def test_list_view_uses_itemform(self):
+        listey = List.objects.create()
+        response = Client().get('/lists/%d/' % (listey.id,))
+        self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertContains(response, '<input id="id_text"')
+
+
     def test_saving_a_POST_request_to_an_existing_list(self):
         list = List.objects.create()
         other_list = List.objects.create()
         client = Client()
         response = client.post(
             '/lists/%d/' % (list.id,),
-            data={'item_text': 'A new item for an existing list'}
+            data={'text': 'A new item for an existing list'}
         )
 
         self.assertEqual(Item.objects.all().count(), 1)
@@ -100,7 +114,7 @@ class ListViewTest(TestCase):
         client = Client()
         response = client.post(
             '/lists/%d/' % (list1.id,),
-            data={'item_text': ''}
+            data={'text': ''}
         )
 
         self.assertEqual(Item.objects.all().count(), 0)
@@ -115,7 +129,7 @@ class ListViewTest(TestCase):
         client = Client()
         response = client.post(
             '/lists/%d/' % (list1.id,),
-            data={'item_text': 'textey'}
+            data={'text': 'textey'}
         )
 
         self.assertEqual(Item.objects.all().count(), 1)
