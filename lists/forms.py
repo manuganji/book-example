@@ -1,14 +1,14 @@
-from django.core.exceptions import ValidationError
 from django import forms
 
 from lists.models import Item
+
+EMPTY_LIST_ERROR = "You can't have an empty list item"
 
 class ItemForm(forms.models.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        empty_error = "You can't have an empty list item"
-        self.fields['text'].error_messages['required'] = empty_error
+        self.fields['text'].error_messages['required'] = EMPTY_LIST_ERROR
 
     class Meta:
         model = Item
@@ -17,6 +17,5 @@ class ItemForm(forms.models.ModelForm):
             'text': forms.fields.TextInput(
                 attrs={'placeholder': 'Enter a to-do item'}
             ),
-            'list': forms.fields.HiddenInput(),
         }
 
