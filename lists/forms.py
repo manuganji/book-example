@@ -2,6 +2,7 @@ from django import forms
 
 from lists.models import Item
 
+DUPLICATE_ITEM_ERROR = "You've already got this in your list"
 EMPTY_LIST_ERROR = "You can't have an empty list item"
 
 class ItemForm(forms.models.ModelForm):
@@ -20,5 +21,13 @@ class ItemForm(forms.models.ModelForm):
         }
 
 
-class ExistingListItemForm(forms.Form):
-    pass
+class ExistingListItemForm(ItemForm):
+
+    class Meta(ItemForm.Meta):
+        fields = ('list', 'text')
+
+    def validate_unique(self):
+        super().validate_unique()
+        if self.non_field_errors():
+            self._update_errors({'text': [DUPLICATE_ITEM_ERROR]})
+            del self.errors['__all__']
