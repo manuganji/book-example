@@ -57,6 +57,7 @@ class NewListTest(TestCase):
             data={'text': ''}
         )
 
+        self.assertEqual(List.objects.all().count(), 0)
         self.assertEqual(Item.objects.all().count(), 0)
         self.assertTemplateUsed(response, 'home.html')
         expected_error =  escape("You can't have an empty list item")

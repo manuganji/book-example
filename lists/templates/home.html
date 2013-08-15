@@ -4,10 +4,11 @@
 
 {% block form %}
     <form method="POST" action="/lists/new" >
-        {{ form.text }}
         {% csrf_token %}
-        {% if error %}
-            <p class="error">{{ error }}</p>
+        {{ form.text }}
+        {{ form.text.errors }}
+        {% if form.errors %}
+            <p class="error">{{ form.text.error }}</p>
         {% endif %}
     </form>
 {% endblock %}
