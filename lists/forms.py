@@ -19,3 +19,6 @@ class ItemForm(forms.models.ModelForm):
             ),
         }
 
+
+class ExistingListItemForm(forms.Form):
+    pass
