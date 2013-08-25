@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load browserid %}
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,18 @@
         <title>To-Do lists</title>
     </head>
     <body>
+<html>
+  <body>
+
+    {% browserid_info %}
+      <div class="authentication">
+        {% if user.is_authenticated %}
+          {% browserid_logout text='Logout' %}
+        {% else %}
+          {% browserid_login text='Login' %}
+        {% endif %}
+      </div>
+
         <div class="container">
             <div class="row">
                 <div class="span8 offset2">
@@ -24,5 +37,6 @@
         </div>
         <script src="http://code.jquery.com/jquery.js"></script>
         <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+        {% browserid_js %}
     </body>
 </html>

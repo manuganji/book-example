@@ -104,6 +104,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+AUTHENTICATION_BACKENDS = (
+   'django_browserid.auth.BrowserIDBackend',
+)
+
 ROOT_URLCONF = 'superlists.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
@@ -113,6 +117,10 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+)
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'django_browserid.context_processors.browserid',
 )
 
 INSTALLED_APPS = (
@@ -129,6 +137,7 @@ INSTALLED_APPS = (
     'lists',
     'functional_tests',
 )
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
