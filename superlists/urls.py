@@ -8,7 +8,6 @@ urlpatterns = patterns('',
     url(r'^$', 'lists.views.home_page', name='home'),
     url(r'^lists/', include('lists.urls')),
 
-    url(r'^browserid/', include('django_browserid.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
