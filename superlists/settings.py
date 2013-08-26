@@ -128,6 +128,12 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'lists',
     'functional_tests',
+    'accounts',
+)
+
+AUTH_USER_MODEL = 'accounts.ListUser'
+AUTHENTICATION_BACKENDS = (
+    'accounts.authentication.PersonaAuthenticationBackend',
 )
 
 # A sample logging configuration. The only tangible logging

@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
+import requests
 
 from lists.forms import ExistingListItemForm, ItemForm
 from lists.models import Item, List
