@@ -8,6 +8,7 @@ class Item(models.Model):
     list = models.ForeignKey(List)
 
     class Meta:
+        ordering = ('id',)
         unique_together = ('list', 'text')
 
 
