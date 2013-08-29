@@ -4,7 +4,7 @@ class List(models.Model):
     pass
 
 class Item(models.Model):
-    text = models.TextField()
+    text = models.TextField(unique=True)
     list = models.ForeignKey(List)
 
 
