@@ -40,3 +40,10 @@ class ListAndItemModelsTest(TestCase):
         with self.assertRaises(ValidationError):
             item.save()
 
+
+    def test_cannot_save_duplicate_items(self):
+        list1 = List.objects.create()
+        Item.objects.create(list=list1, text='bla')
+        with self.assertRaises(ValidationError):
+            Item.objects.create(list=list1, text='bla')
+
